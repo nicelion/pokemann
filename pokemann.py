@@ -1,3 +1,6 @@
+# pokemann.py
+#
+# By Ian Thompson and Morgan Theys
 import random
 
 class Pokemann:
