@@ -1,6 +1,7 @@
 # pokemann.py
 #
 # By Ian Thompson and Morgan Theys
+
 import random
 
 class Pokemann:
@@ -58,7 +59,11 @@ class Pokemann:
                   
     def heal(self, amount):
         self.current_health += amount
-        print(self.name + " is healed!")
+
+        if self.current_health > self.health:
+            self.current_health = self.health
+
+        print(self.name + " is healed and has " + str(self.current_health) + " health!")
         
     def get_available_moves(self):
         result = []
