@@ -60,6 +60,10 @@ class Pokemann:
     def heal(self, amount):
         self.current_health += amount
 
+        """
+        Raises current_health by amount but not to more than the base health.
+        """
+
         if self.current_health > self.health:
             self.current_health = self.health
 
@@ -120,6 +124,9 @@ class Move:
         e = self.effectiveness[(self.kind, target.kind)]
 
         return int(p * a / d * e)
+
+    def restore(self, amount):
+        self.
 
                       
 class Player:
