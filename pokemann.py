@@ -16,6 +16,7 @@ class Pokemann:
         self.health = health
         self.moves = moves # this is a list of Move objects
         self.image = image # path to image file
+        self.fainted = False
 
         self.current_health = health
 
@@ -39,9 +40,9 @@ class Pokemann:
             r = random.randint(1, 100)
 
             if r <= move.accuracy:
-                damage = move.get_damage(self, target)
-                target.apply_damage(damage)
-                print(move.name + " hits " + target.name + " for " + str(damage) + ".")
+                damage = move.calculate_damage(self, target)
+                print(self.name + " hits " + target.name + " with " + move.name  + " for " + str(damage) + ".")
+                target.take_damage(damage)
             else:
                 print(move.name + "missed!")
 
@@ -91,22 +92,32 @@ class Pokemann:
     def draw(self):
         pass
 
+    def restore(self):
+        """
+        Restores all health and resets powerpoint for all moves.
+        """
+        self.current_health = self.health
 
+        for m in self.moves:
+            m.restore()
+        
+
+    
 class Move:
     STRONG = 2.0
     NORMAL = 1.0
     WEAK = 0.5
         
     effectiveness = {
-            ('student' ,'administrator'): STRONG,
+            ('student' ,'admin'): STRONG,
             ('student' ,'student'): NORMAL,
             ('student', 'teacher'): WEAK,
             ('teacher', 'student'): STRONG,
             ('teacher' ,'teacher'): NORMAL,
-            ('teacher' ,'administrator'): WEAK,
-            ('administrator' ,'teacher'): STRONG,
-            ('administrator', 'administrator'): NORMAL,
-            ('administrator', 'student'): WEAK
+            ('teacher' ,'admin'): WEAK,
+            ('admin' ,'teacher'): STRONG,
+            ('admin', 'admin'): NORMAL,
+            ('admin', 'student'): WEAK
           }
                  
     def __init__(self, name, kind, powerpoint, power, accuracy):
@@ -118,7 +129,7 @@ class Move:
 
         self.remaining_power = power
 
-    def get_damage(self, attacker, target):
+    def calculate_damage(self, attacker, target):
 
         p = self.power
         a = attacker.attack
@@ -127,8 +138,14 @@ class Move:
 
         return int(p * a / d * e)
 
-    def restore(self, amount):
-        self.
+    def restore(self):
+        """
+        Resets remaing_power to starting powerpoint.
+        """
+
+        self.remaining_power = self.powerpoint
+        
+        
 
                       
 class Player:
