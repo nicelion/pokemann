@@ -6,13 +6,14 @@ import random
 
 class Pokemann:
 
-    def __init__(self, name, kind, attack, defense, speed, health, moves, image):
+    def __init__(self, name, kind, attack, defense, speed, catch_rate, health, moves, image):
 
         self.name = name
         self.kind = kind
         self.attack = attack
         self.defense = defense
         self.speed = speed
+        self.catch_rate = catch_rate
         self.health = health
         self.moves = moves # this is a list of Move objects
         self.image = image # path to image file
@@ -153,11 +154,7 @@ class Move:
 class Player:
 
     def __init__(self, characters):
-        Character.__init__(self, name, pokemann, image)
-        
-        self.collection = []
-        self.pokeballs = 0
-
+        pass
 
     def fight(self, target):
         '''
@@ -172,22 +169,7 @@ class Player:
         pass
 
     def catch(self, target):
-         """
-        Can only be applied to wild pokemann. Determine a catch by generating a random
-        value and comparing it to the catch_rate. If a catch is successful, append the
-        target to the player's pokemann list. However, if the pokemann list already
-        contains 6 pokemann, add the caught target to the players computer instead.
-        Pokemann sent to the computer will be fully restored, but other caught pokemann
-        will remain at the strenght they were caught. Decrease the player's pokeball
-        count by 1 regardless of success.
-        """
-        r = random.randint(1, 100)
-
-        if r <= target.catch_rate:
-            pass
-        else:
-            print("It got away!")
-   
+        pass
     
     def draw(self):
         pass
@@ -229,6 +211,10 @@ class Character:
     
     def draw(self):
         pass
+
+    def restore(self):
+        for p in self.pokemann:
+            p.restore()
                 
 class Game:
 
@@ -253,18 +239,34 @@ class Player(Character):
 
     def __init__(self, name, pokemann, image):
         Character.__init__(self, name, pokemann, image)
-        
+
+        self.computer = []
         self.collection = []
-        self.pokeballs = 0
+        self.pokeballs = 43456765432456755435675655456786456754653676980987654323567897654433243565789
 
     def catch(self, target):
         """
-        Can only be applied to wild pokemann. Determine a catch by generating a random
-        value based on the target health. If a catch is successful, add the target to the
-        player's collection. Decrease the player's pokeball count by 1 regardless of success.
-        (Perhaps pokeballs kind could be incorporated into the probability at some point.)
+        Can only be applied to a wild pokemann. Determine a catch by generating a random
+        value and comparing it to the catch_rate. If a catch is successful, append the
+        target to the player's pokemann list. However, if the pokemann list already
+        contains 6 pokemann, add the caught target to the players computer instead.
+        Pokemann sent to the computer will be fully restored, but other caught pokemann
+        will remain at the strength they were caught. Decrease the player's pokeball
+        count by 1 regardless of success.
+        Return True if the catch is successful and False otherwise.
         """
-        pass
+        r = random.randint(1, 100)
+        h = int(target.current_health) / 4 + r
+
+        if self.pokeballs > 0:
+            self.pokeballs -= 1
+            self.pokemann.append(target)
+            print(target.name + " has been caught")
+            return True
+
+        else:
+            return False
+            print(target.name + " got away!")
     
     
 class Opponent(Character):
@@ -367,6 +369,12 @@ class Game:
         # draw stuff
 
 
+class NPC(Character):
+
+    def __init__(self, name, pokemann, image):
+        Character.__init__(self, name, pokemann, image)
+      
+
 
 if __name__ == '__main__':
 
@@ -387,15 +395,15 @@ if __name__ == '__main__':
     restrict_lunchtime = Move("Restrict Lunchtime", "admin", 40, 40, 70)
 
     # Create some Pokemann(s)
-    rooksabee = Pokemann("rooksabee", "teacher", 30, 20, 50, 30, [homework, pop_quiz, teacher_strike], "coopasaur.png")
-    criderbat = Pokemann("criderbat", "teacher", 30, 20, 50, 30, [complaining_about_freezer_space, teacher_strike, lecture], "mayfieldarow.png")
-    grantizard = Pokemann("grantizard", "teacher", 30, 20, 50, 30, [homework, teacher_strike, lecture], "andrewag.png")
-    coopazoid = Pokemann("coopazoid", "teacher", 30, 20, 50, 30, [teacher_strike, homework, lecture], "andrewag.png")
-    mayflower = Pokemann("mayflower", "admin", 30, 20, 50, 30, [ask_for_id, call_parents, call_parents], "andrewag.png")
-    bishlypuff = Pokemann("bishlypuff", "admin", 30, 20, 50, 30, [ask_for_id, call_parents, call_parents], "andrewag.png")
-    sartinoid = Pokemann("sartinoid", "admin", 30, 20, 50, 30, [ask_for_id, call_parents, call_parents], "andrewag.png")
-    fresheon = Pokemann("fresheon", "student", 30, 20, 50, 30, [no_homework, talking_back, complaing_problems], "andrewag.png")
-    seniatar = Pokemann("seniatar", "student", 30, 20, 50, 30, [no_homework, talking_back, complaing_problems], "andrewag.png")
+    rooksabee = Pokemann("rooksabee", "teacher", 30, 20, 50, 10, 30, [homework, pop_quiz, teacher_strike], "coopasaur.png")
+    criderbat = Pokemann("criderbat", "teacher", 30, 20, 50, 23, 30, [complaining_about_freezer_space, teacher_strike, lecture], "mayfieldarow.png")
+    grantizard = Pokemann("grantizard", "teacher", 30, 20, 50, 60, 30, [homework, teacher_strike, lecture], "andrewag.png")
+    coopazoid = Pokemann("coopazoid", "teacher", 30, 20, 50, 20, 30, [teacher_strike, homework, lecture], "andrewag.png")
+    mayflower = Pokemann("mayflower", "admin", 30, 20, 50, 50, 30, [ask_for_id, call_parents, call_parents], "andrewag.png")
+    bishlypuff = Pokemann("bishlypuff", "admin", 30, 20, 50, 25, 30, [ask_for_id, call_parents, call_parents], "andrewag.png")
+    sartinoid = Pokemann("sartinoid", "admin", 30, 20, 50, 32,30, [ask_for_id, call_parents, call_parents], "andrewag.png")
+    fresheon = Pokemann("fresheon", "student", 30, 20, 50, 75, 30, [no_homework, talking_back, complaing_problems], "andrewag.png")
+    seniatar = Pokemann("seniatar", "student", 30, 20, 50, 14, 30, [no_homework, talking_back, complaing_problems], "andrewag.png")
 
     # Create Player
     pat = Player("Pat Riotum", [mayflower, criderbat, grantizard, sartinoid], "pat.png")
