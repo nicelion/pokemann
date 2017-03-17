@@ -215,6 +215,17 @@ class Character:
     def restore(self):
         for p in self.pokemann:
             p.restore()
+    def get_active_pokemann(self):
+        """
+        Returns the first unfainted character in the pokemann list. If all pokemann
+        are fainted, return None.
+        """
+        available = self.get_available_pokemann()
+
+        if len(available) > 0:
+            return available[0]
+        else:
+            return None            
                 
 class Game:
 
@@ -242,7 +253,7 @@ class Player(Character):
 
         self.computer = []
         self.collection = []
-        self.pokeballs = 43456765432456755435675655456786456754653676980987654323567897654433243565789
+        self.pokeballs = 23456789034567789898789876545678987654
 
     def catch(self, target):
         """
@@ -255,19 +266,43 @@ class Player(Character):
         count by 1 regardless of success.
         Return True if the catch is successful and False otherwise.
         """
-        r = random.randint(1, 100)
-        h = int(target.current_health) / 4 + r
 
-        if self.pokeballs > 0:
+        r = random.randint(1,100)
+
+        if self.pokeballs != 0:
             self.pokeballs -= 1
-            self.pokemann.append(target)
-            print(target.name + " has been caught")
-            return True
-
+            if r <= target.catch_rate:
+                if len(self.pokemann) >=6:
+                    self.computer.append(target)
+                    for n in self.computer:
+                        n.restore()
+                    print("Computer caught " + target.name + ".")
+                else:
+                    self.pokemann.append(target)
+                    print("You caught " + target.name + ".")
+            else:
+                print("It got away")
         else:
+            print("No Pokeballs Remaining")
+
+    def run(self, target):
+        """
+        Can only be applied in the presence of a wild pokemann. Success is determined by
+        comparing speeds of the player's active pokemann and the wild pokemann. Incoroporate
+        randomness so that speed is not the only factor determining success.
+        Return True if the escape is successful and False otherwise.
+        """
+
+        r = random.randint(1,100)
+        s = random.randint(1,20)
+        runners = self.get_active_pokemann()
+
+        if runners.speed + r > target.speed + s:
+            print("you have escaped")
+            return True
+        else:
+            print("Captured")
             return False
-            print(target.name + " got away!")
-    
     
 class Opponent(Character):
 
@@ -368,12 +403,6 @@ class Game:
 
         # draw stuff
 
-
-class NPC(Character):
-
-    def __init__(self, name, pokemann, image):
-        Character.__init__(self, name, pokemann, image)
-      
 
 
 if __name__ == '__main__':
