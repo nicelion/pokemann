@@ -252,7 +252,7 @@ class Player(Character):
         Character.__init__(self, name, pokemann, image)
 
         self.computer = []
-        self.collection = []
+        self.computer = []
         self.pokeballs = 23456789034567789898789876545678987654
 
     def catch(self, target):
@@ -273,8 +273,8 @@ class Player(Character):
             self.pokeballs -= 1
             if r <= target.catch_rate:
                 if len(self.pokemann) >=6:
-                    self.computer.append(target)
-                    for n in self.computer:
+                    self.collection.append(target)
+                    for n in self.collection:
                         n.restore()
                     print("Computer caught " + target.name + ".")
                 else:
@@ -304,7 +304,7 @@ class Player(Character):
             print("Captured")
             return False
     
-class Opponent(Character):
+class NPC(Character):
 
     def __init__(self, name, pokemann, image):
         Character.__init__(self, name, pokemann, image)
@@ -438,8 +438,8 @@ if __name__ == '__main__':
     pat = Player("Pat Riotum", [mayflower, criderbat, grantizard, sartinoid], "pat.png")
 
     # Create Opponents
-    rocket = Opponent("Team Rocket", [seniatar, fresheon, rooksabee, sartinoid], "rocket.png")
-    jessie = Opponent("Jessie", [coopazoid, bishlypuff, rooksabee, seniatar], "jessie.png")
+    rocket = NPC("Team Rocket", [seniatar, fresheon, rooksabee, sartinoid], "rocket.png")
+    jessie = NPC("Jessie", [coopazoid, bishlypuff, rooksabee, seniatar], "jessie.png")
 
     # Create a game
     g = Game()
